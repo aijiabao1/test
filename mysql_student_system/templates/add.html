@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}添加学生{% endblock %}
+
+{% block content %}
+<h1>添加学生</h1>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+<form class="form-box" method="post">
+    <p>
+        姓名：<br>
+        <input type="text" name="name">
+    </p>
+
+    <p>
+        年龄：<br>
+        <input type="number" name="age">
+    </p>
+
+    <p>
+        成绩：<br>
+        <input type="number" step="0.1" name="score">
+    </p>
+
+    <button class="btn" type="submit">提交</button>
+    <a class="btn btn-gray" href="/students">返回</a>
+</form>
+{% endblock %}

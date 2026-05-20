@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}学生管理系统{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+
+        {% if session.get("logged_in") %}
+            <div class="top-bar">
+                <span>
+                  当前用户：{{ session.get("username") }}
+                           {% if session.get("role") == "admin" %}
+                            （管理员）
+                            {% else %}
+                            （普通用户）
+                            {% endif %}
+                </span>
+                <a class="btn btn-gray" href="/logout">退出登录</a>
+            </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

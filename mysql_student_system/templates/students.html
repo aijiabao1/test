@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}学生列表{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+    <h1>学生列表</h1>
+    {% if session.get("role") == "admin" %}
+    <a class="btn" href="/add">添加学生</a>
+{% endif %}
+</div>
+
+<form class="search-form" method="get" action="/students">
+    <input type="text" name="keyword" placeholder="请输入学生姓名" value="{{ keyword }}">
+    <button type="submit">搜索</button>
+    <a href="/students">重置</a>
+</form>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>姓名</th>
+        <th>年龄</th>
+        <th>成绩</th>
+        {% if session.get("role") == "admin" %}
+         <th>操作</th>
+        {% endif %}
+    </tr>
+
+    {% for student in students %}
+    <tr>
+        <td>{{ student.id }}</td>
+        <td>{{ student.name }}</td>
+        <td>{{ student.age }}</td>
+        <td>{{ student.score }}</td>
+        {% if session.get("role") == "admin" %}
+        <td>
+           <a href="/edit/{{ student.id }}">编辑</a>
+           |
+           <a href="/delete/{{ student.id }}" onclick="return confirm('确定要删除吗？')">删除</a>
+        </td>
+{% endif %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

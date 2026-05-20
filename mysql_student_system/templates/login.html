@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}登录{% endblock %}
+
+{% block content %}
+<h1>系统登录</h1>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+<form class="form-box" method="post">
+    <p>
+        用户名：<br>
+        <input type="text" name="username">
+    </p>
+
+    <p>
+        密码：<br>
+        <input type="password" name="password">
+    </p>
+
+    <button class="btn" type="submit">登录</button>
+</form>
+<p>
+    还没有账号？<a href="/register">立即注册</a>
+</p>
+{% endblock %}
