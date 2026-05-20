@@ -46,6 +46,7 @@ def home():
     return "欢迎来到学生管理系统"
 
 @app.route("/students")
+@login_required
 def students():
     keyword = request.args.get("keyword", "")
 
@@ -331,31 +332,144 @@ def api_students():
             }
         }), 201
 
-@app.route("/api/students/<int:student_id>")
+@app.route("/api/students/<int:student_id>", methods=["GET", "PUT", "DELETE"])
 @login_required
 def api_student_detail(student_id):
     conn = get_conn()
     cursor = conn.cursor()
 
-    sql = "SELECT * FROM students WHERE id = %s"
-    data = (student_id,)
+    if request.method == "GET":
+        sql = "SELECT * FROM students WHERE id = %s"
+        cursor.execute(sql, (student_id,))
+        student = cursor.fetchone()
 
-    cursor.execute(sql, data)
-    student = cursor.fetchone()
+        cursor.close()
+        conn.close()
 
-    cursor.close()
-    conn.close()
+        if student:
+            return jsonify({
+                "code": 200,
+                "message": "查询成功",
+                "data": student
+            })
+        else:
+            return jsonify({
+                "code": 404,
+                "message": "学生不存在",
+                "data": None
+            }), 404
 
-    if student:
+    if request.method == "PUT":
+        if session.get("role") != "admin":
+            cursor.close()
+            conn.close()
+            return jsonify({
+                "code": 403,
+                "message": "没有权限修改学生",
+                "data": None
+            }), 403
+
+        data = request.get_json(silent=True) or {}
+
+        name = data.get("name")
+        age = data.get("age")
+        score = data.get("score")
+
+        if not name:
+            cursor.close()
+            conn.close()
+            return jsonify({
+                "code": 400,
+                "message": "姓名不能为空",
+                "data": None
+            }), 400
+
+        try:
+            age = int(age)
+            score = float(score)
+        except:
+            cursor.close()
+            conn.close()
+            return jsonify({
+                "code": 400,
+                "message": "年龄和成绩格式错误",
+                "data": None
+            }), 400
+
+        if age <= 0 or age > 120:
+            cursor.close()
+            conn.close()
+            return jsonify({
+                "code": 400,
+                "message": "年龄必须在 1 到 120 之间",
+                "data": None
+            }), 400
+
+        if score < 0 or score > 100:
+            cursor.close()
+            conn.close()
+            return jsonify({
+                "code": 400,
+                "message": "成绩必须在 0 到 100 之间",
+                "data": None
+            }), 400
+
+        sql = "UPDATE students SET name=%s, age=%s, score=%s WHERE id=%s"
+        cursor.execute(sql, (name, age, score, student_id))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            cursor.close()
+            conn.close()
+            return jsonify({
+                "code": 404,
+                "message": "学生不存在",
+                "data": None
+            }), 404
+
+        cursor.close()
+        conn.close()
+
         return jsonify({
             "code": 200,
-            "message": "查询成功",
-            "data": student
+            "message": "修改成功",
+            "data": {
+                "id": student_id,
+                "name": name,
+                "age": age,
+                "score": score
+            }
         })
-    else:
+
+    if request.method == "DELETE":
+        if session.get("role") != "admin":
+            cursor.close()
+            conn.close()
+            return jsonify({
+                "code": 403,
+                "message": "没有权限删除学生",
+                "data": None
+            }), 403
+
+        sql = "DELETE FROM students WHERE id = %s"
+        cursor.execute(sql, (student_id,))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            cursor.close()
+            conn.close()
+            return jsonify({
+                "code": 404,
+                "message": "学生不存在",
+                "data": None
+            }), 404
+
+        cursor.close()
+        conn.close()
+
         return jsonify({
-            "code": 404,
-            "message": "学生不存在",
+            "code": 200,
+            "message": "删除成功",
             "data": None
         })
 
