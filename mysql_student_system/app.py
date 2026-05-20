@@ -1,10 +1,14 @@
+import os
 from flask import Flask, render_template, request, redirect,session,jsonify
 from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
 import pymysql
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "student_system_secret_key"
+app.secret_key = os.getenv("SECRET_KEY")
 
 def get_conn():
     conn = pymysql.connect(
