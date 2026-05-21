@@ -4,22 +4,13 @@ from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
 import pymysql
 from dotenv import load_dotenv
+from dp import get_conn
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-def get_conn():
-    conn = pymysql.connect(
-        host="localhost",
-        user="root",
-        password="20021210",
-        database="student_system",
-        charset="utf8mb4",
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return conn
 def login_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
