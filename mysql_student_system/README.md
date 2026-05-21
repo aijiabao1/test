@@ -1,8 +1,25 @@
-# Flask + MySQL 学生管理系统
+# 学生管理系统
 
-这是一个基于 Flask 和 MySQL 开发的学生信息管理系统，实现了用户注册、登录、学生信息增删改查、搜索、密码加密和登录保护等功能。
+这是一个基于 Python Flask 和 MySQL 开发的学生管理系统，主要用于练习 Python Web 后端开发、数据库操作、用户登录注册和基础 API 接口设计。
 
-## 技术栈
+## 一、项目功能
+
+本项目目前实现了以下功能：
+
+- 用户注册
+- 用户登录
+- 用户退出
+- 密码加密存储
+- 登录状态保护
+- 管理员权限控制
+- 学生信息添加
+- 学生信息查询
+- 学生信息修改
+- 学生信息删除
+- 学生姓名搜索
+- 学生信息 API 接口
+
+## 二、技术栈
 
 - Python
 - Flask
@@ -13,37 +30,16 @@
 - Werkzeug
 - python-dotenv
 
-## 功能介绍
-
-- 用户注册
-- 用户登录
-- 退出登录
-- 密码加密存储
-- 学生列表展示
-- 添加学生
-- 修改学生
-- 删除学生
-- 搜索学生
-- 登录状态保护
-
-## 项目结构
+## 三、项目结构
 
 ```text
 mysql_student_system/
-├── app.py
-├── db.py
-├── create_admin.py
-├── init_db.sql
-├── requirements.txt
-├── README.md
-├── .env
-├── .gitignore
-├── static/
-│   └── style.css
-└── templates/
-    ├── base.html
-    ├── login.html
-    ├── register.html
-    ├── students.html
-    ├── add.html
-    └── edit.html
+├── app.py              # Flask 主程序
+├── dp.py               # 数据库连接配置
+├── create_admin.py     # 创建管理员账号
+├── init_db.sql         # 数据库初始化文件
+├── requirements.txt    # 项目依赖
+├── .env.example        # 环境变量示例
+├── templates/          # HTML 页面
+├── static/             # 静态资源
+└── README.md           # 项目说明文档
